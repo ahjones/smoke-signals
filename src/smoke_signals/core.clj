@@ -32,13 +32,13 @@
           messages))
 
 ;; Shells out to notify-send to send a notification of the count of the specified messages.
-(defn- notify-about [messages] 
-  (if (not (empty? messages))
+(defn- notify-about [messages]
+  (if (seq messages)
     (shell/sh "notify-send" (str "Detected " (count messages) " Campfire messages"))))
 
 ;; Stores the id of the most recent Campfire message to an atom
 (defn- store-most-recent-message-id [messages]
-  (if (not (empty? messages))
+  (if (seq messages)
     (reset! most-recent-message-id ((last messages) :id)))
   messages)
 
