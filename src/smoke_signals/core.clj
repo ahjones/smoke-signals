@@ -15,10 +15,6 @@
       :body
       :messages))
 
-(defn- message-body [message]
-  (let [body (message :body)]
-    (if (nil? body) "" body)))
-
 (defn- text-message? [message]
   (= (message :type) "TextMessage"))
 
@@ -28,7 +24,7 @@
             (text-message? %)
             (not (empty? (re-seq
                           (re-pattern pattern)
-                          (message-body %))))) 
+                          (% :body "")))))
           messages))
 
 ;; Shells out to notify-send to send a notification of the count of the specified messages.
