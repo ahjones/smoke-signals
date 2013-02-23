@@ -20,11 +20,8 @@
 
 ;; Filters out only those Campfire messages that have a body that matches the specified pattern.
 (defn- filter-messages [messages pattern]
-  (filter #(and
-            (text-message? %)
-            (not (empty? (re-seq
-                          (re-pattern pattern)
-                          (% :body "")))))
+  (filter #(and (text-message? %)
+                (re-find (re-pattern pattern) (% :body "")))
           messages))
 
 ;; Shells out to notify-send to send a notification of the count of the specified messages.
