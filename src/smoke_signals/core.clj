@@ -3,7 +3,7 @@
   (:require [clj-http.client :as client]
             [clojure.contrib.shell-out :as shell :only [sh]]))
 
-(def most-recent-message-id (atom ""))
+(def most-recent-message-id (atom nil))
 
 ;; Pulls the latest messages from Campfire that have been posted since the most recent
 ;; message from the previously pulled batch.
