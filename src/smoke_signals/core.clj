@@ -8,12 +8,12 @@
 ;; Pulls the latest messages from Campfire that have been posted since the most recent
 ;; message from the previously pulled batch.
 (defn- get-latest-messages [campfire-url token]
-  (((client/get (str campfire-url "/recent.json")
-                 {:query-params {"since_message_id" @most-recent-message-id}
-                  :basic-auth [token "dummypassword"]
-                  :as :json})
-    :body) :messages)
-)
+  (-> (client/get (str campfire-url "/recent.json")
+                  {:query-params {"since_message_id" @most-recent-message-id}
+                   :basic-auth [token "dummypassword"]
+                   :as :json})
+      :body
+      :messages))
 
 (defn- message-body [message]
   (let [body (message :body)]
@@ -44,9 +44,8 @@
 
 (defn -main [campfire-url token pattern]
   (while true
-    (notify-about
-     (filter-messages
-      (store-most-recent-message-id
-       (get-latest-messages campfire-url token))
-      pattern))
+    (-> (get-latest-messages campfire-url token)
+        (store-most-recent-message-id)
+        (filter-messages pattern)
+        (notify-about))
     (Thread/sleep 10000)))
