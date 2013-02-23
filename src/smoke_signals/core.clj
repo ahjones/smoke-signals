@@ -19,13 +19,13 @@
   (let [body (message :body)]
     (if (nil? body) "" body)))
 
-(defn- is-text-message? [message]
+(defn- text-message? [message]
   (= (message :type) "TextMessage"))
 
 ;; Filters out only those Campfire messages that have a body that matches the specified pattern.
 (defn- filter-messages [messages pattern]
-  (filter #(and 
-            (is-text-message? %)
+  (filter #(and
+            (text-message? %)
             (not (empty? (re-seq
                           (re-pattern pattern)
                           (message-body %))))) 
