@@ -45,10 +45,9 @@
 
 (defn -main [campfire-url token pattern]
   (while true
-    (do
-      (notify-about
-       (filter-messages
-        (store-most-recent-message-id
-         (get-latest-messages campfire-url token))
-        pattern))
-      (Thread/sleep 10000))))
+    (notify-about
+     (filter-messages
+      (store-most-recent-message-id
+       (get-latest-messages campfire-url token))
+      pattern))
+    (Thread/sleep 10000)))
