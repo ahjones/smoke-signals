@@ -1,7 +1,8 @@
 (ns smoke-signals.core
   (:gen-class)
   (:require [clj-http.client :as client]
-            [clojure.contrib.shell-out :as shell :only [sh]]))
+            [clojure.contrib.shell-out :as shell :only [sh]])
+  (:import [java.util.concurrent TimeUnit]))
 
 (def most-recent-message-id (atom nil))
 
@@ -41,4 +42,4 @@
         (store-most-recent-message-id)
         (filter-messages pattern)
         (notify-about))
-    (Thread/sleep 10000)))
+    (.sleep TimeUnit/SECONDS 10)))
