@@ -38,10 +38,9 @@
 
 ;; Stores the id of the most recent Campfire message to an atom
 (defn- store-most-recent-message-id [messages]
-  (do 
-    (if (not (empty? messages))
-      (reset! most-recent-message-id ((last messages) :id)))
-    messages))
+  (if (not (empty? messages))
+    (reset! most-recent-message-id ((last messages) :id)))
+  messages)
 
 (defn -main [campfire-url token pattern]
   (while true
