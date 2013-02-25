@@ -25,21 +25,21 @@
 
 ;; Filters out only those Campfire messages that have a body that matches the specified pattern.
 (defn- filter-messages [messages pattern]
-  (filter #(and 
+  (filter #(and
             (is-text-message? %)
             (not (empty? (re-seq
                           (re-pattern pattern)
-                          (message-body %))))) 
+                          (message-body %)))))
           messages))
 
 ;; Shells out to notify-send to send a notification of the count of the specified messages.
-(defn- notify-about [messages] 
+(defn- notify-about [messages]
   (if (not (empty? messages))
     (shell/sh "notify-send" (str "Detected " (count messages) " Campfire messages"))))
 
 ;; Stores the id of the most recent Campfire message to an atom
 (defn- store-most-recent-message-id [messages]
-  (do 
+  (do
     (if (not (empty? messages))
       (reset! most-recent-message-id ((last messages) :id)))
     messages))
