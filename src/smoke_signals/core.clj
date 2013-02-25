@@ -1,7 +1,8 @@
 (ns smoke-signals.core
   (:gen-class)
   (:require [clj-http.client :as client]
-            [clojure.contrib.shell-out :as shell :only [sh]]))
+            [clojure.contrib.shell-out :as shell :only [sh]])
+  (:import [java.util.concurrent Executors TimeUnit]))
 
 (def most-recent-message-id (atom ""))
 
@@ -43,12 +44,14 @@
       (reset! most-recent-message-id ((last messages) :id)))
     messages))
 
+(defn- main-loop
+  [campfire-url token pattern]
+  (fn []
+    (notify-about
+     (filter-messages
+      (store-most-recent-message-id
+       (get-latest-messages campfire-url token))
+      pattern))))
+
 (defn -main [campfire-url token pattern]
-  (while true
-    (do
-      (notify-about
-       (filter-messages
-        (store-most-recent-message-id
-         (get-latest-messages campfire-url token))
-        pattern))
-      (Thread/sleep 10000))))
+  (doto (Executors/newScheduledThreadPool 1) (.scheduleAtFixedRate (main-loop campfire-url token pattern) 0 10 TimeUnit/SECONDS)))
