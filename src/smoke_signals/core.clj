@@ -1,7 +1,7 @@
 (ns smoke-signals.core
   (:gen-class)
   (:require [clj-http.client :as client]
-            [clojure.contrib.shell-out :as shell :only [sh]])
+            [clojure.java.shell :as shell])
   (:import [java.util.concurrent Executors TimeUnit]))
 
 (def most-recent-message-id (atom ""))
